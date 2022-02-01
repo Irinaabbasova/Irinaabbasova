@@ -1,0 +1,95 @@
+#from pyspark import SparkContext
+#sc = SparkContext()
+
+
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+spark = SparkSession(sc)
+sc = spark.sparkContext
+path = "OTUS/Spark/archive/offense_codes.csv"
+df = spark.read.csv(path)
+df.count()
+
+----
+
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+spark = SparkSession(sc)
+sc = spark.sparkContext
+path = "OTUS/Spark/archive/crime.csv"
+df = spark.read.csv(path)
+df.count()
+
+----
+
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+spark = SparkSession(sc)
+sc = spark.sparkContext
+path = "OTUS/Spark/archive/offense_codes.csv"
+df = spark.read.csv(path)
+
+#Distinct
+distinctDF = df.distinct()
+print("Distinct count: "+str(distinctDF.count()))
+#distinctDF.show(truncate=False)
+
+
+---
+
+
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+spark = SparkSession(sc)
+sc = spark.sparkContext
+path = "OTUS/Spark/archive/offense_codes.csv"
+#df = spark.read.csv(path, header=True, inferSchema= True, sep='\t')
+df = spark.read.option("header", "true").csv(path)
+
+#Drop duplicates
+df2 = df.dropDuplicates(['CODE'])
+print("Distinct count: "+str(df2.count()))
+#df2.show(truncate=False)
+
+----
+
+
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+spark = SparkSession(sc)
+sc = spark.sparkContext
+path = "OTUS/Spark/archive/crime.csv"
+#df = spark.read.csv(path)
+df = spark.read.option("header", "true").csv(path)
+df2 = df.groupBy("DISTRICT").count().show(truncate=False)
+
+
+-----
+
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+from pyspark.sql.types import IntegerType
+
+
+spark = SparkSession(sc)
+sc = spark.sparkContext
+path = "OTUS/Spark/archive/crime.csv"
+df = spark.read.csv(path)
+df = spark.read.option("header", "true").csv(path)
+df = df.withColumn("Lat",df["Lat"].cast(IntegerType()))
+df2 = df.groupBy("DISTRICT").avg("Lat").show(truncate=False)
+
+-----
+
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+from pyspark.sql.types import IntegerType
+
+
+spark = SparkSession(sc)
+sc = spark.sparkContext
+path = "OTUS/Spark/archive/crime.csv"
+df = spark.read.csv(path)
+df = spark.read.option("header", "true").csv(path)
+df = df.withColumn("Long",df["Long"].cast(IntegerType()))
+df2 = df.groupBy("DISTRICT").avg("Long").show(truncate=False)
